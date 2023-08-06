@@ -15,10 +15,6 @@ func main() {
 	fdk.Handle(fdk.HandlerFunc(stringUtilHandler))
 }
 
-type Person struct {
-	Name string `json:"name"`
-}
-
 const (
 	UpperCase = "UPPER"
 	LowerCase = "LOWER"
@@ -39,7 +35,7 @@ func stringUtilHandler(ctx context.Context, in io.Reader, out io.Writer) {
 			"error message - %s", err.Error()))
 		return
 	}
-	log.Printf("received input %+v", request)
+	log.Printf("received input %+v", &request)
 	result, err := stringUtil(request.InputString, request.Operation)
 
 	if request.DryRun {
@@ -70,9 +66,9 @@ func stringUtil(input, op string) (string, error) {
 	case op == UpperCase:
 		return strings.ToUpper(input), nil
 	case op == TitleCase:
-		return strings.ToTitle(input), nil
+		return strings.Title(input), nil
 	default:
-		return "", fmt.Errorf("invalid input: invalid operation was supplied. "+
-			"valid value are [%s,%s,%s]\n", UpperCase, LowerCase, TitleCase)
+		return "", fmt.Errorf("invalid input: invalid operation %q was supplied. "+
+			"valid value are [%s,%s,%s]\n", op, UpperCase, LowerCase, TitleCase)
 	}
 }
