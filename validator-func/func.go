@@ -9,6 +9,8 @@ import (
 	"time"
 )
 
+const waitTimeInSeconds = 65
+
 func main() {
 	fdk.Handle(fdk.HandlerFunc(myHandler))
 }
@@ -21,8 +23,8 @@ func myHandler(ctx context.Context, in io.Reader, out io.Writer) {
 	log.Print("Inside validator function")
 	ip := &FnIO{Input: ""}
 	json.NewDecoder(in).Decode(ip)
-	log.Println("executing business logic...time remaining 60s")
-	time.Sleep(65 * time.Second)
+	log.Printf("executing business logic...time remaining %ds\n", waitTimeInSeconds)
+	time.Sleep(waitTimeInSeconds * time.Second)
 	if ip.Input != "" {
 		log.Printf("Received the input - %s\n", ip.Input)
 		json.NewEncoder(out).Encode(true)
