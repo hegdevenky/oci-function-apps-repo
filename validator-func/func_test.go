@@ -28,7 +28,7 @@ func TestMyHandler(t *testing.T) {
 	// with TimeoutInSeconds
 	in.Reset()
 	out.Reset()
-	in.WriteString(`{"input": "hello", "timeoutInSeconds": 10}`)
+	in.WriteString(`{"input": "hello", "executionTimeInSeconds": 10}`)
 	handlerFunc.Serve(context.Background(), in, out)
 	if strings.TrimSuffix(out.String(), "\n") != "true" {
 		t.Errorf("assertion failure: expected %q but got %q", "true", out.String())

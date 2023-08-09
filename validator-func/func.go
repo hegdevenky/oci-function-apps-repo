@@ -9,15 +9,15 @@ import (
 	"time"
 )
 
-const defaultTimeoutInSeconds = 65
+const defaultExecutionTimeInSeconds = 65
 
 func main() {
 	fdk.Handle(fdk.HandlerFunc(myHandler))
 }
 
 type FnIO struct {
-	Input            string `json:"input,omitempty"`
-	TimeoutInSeconds int    `json:"timeoutInSeconds,omitempty"`
+	Input                  string `json:"input,omitempty"`
+	ExecutionTimeInSeconds int    `json:"executionTimeInSeconds,omitempty"`
 }
 
 func myHandler(ctx context.Context, in io.Reader, out io.Writer) {
@@ -29,13 +29,13 @@ func myHandler(ctx context.Context, in io.Reader, out io.Writer) {
 			"proceeding with default values\n", *ip)
 	}
 	log.Printf("INFO: received input %+v\n", *ip)
-	timeout := defaultTimeoutInSeconds
-	if ip.TimeoutInSeconds != 0 {
-		timeout = ip.TimeoutInSeconds
+	timeout := defaultExecutionTimeInSeconds
+	if ip.ExecutionTimeInSeconds != 0 {
+		timeout = ip.ExecutionTimeInSeconds
 	}
 	log.Printf("INFO: executing business logic...time remaining %ds\n", timeout)
 	time.Sleep(time.Duration(timeout) * time.Second)
-	if ip.Input != "" || ip.TimeoutInSeconds != 0 {
+	if ip.Input != "" || ip.ExecutionTimeInSeconds != 0 {
 		json.NewEncoder(out).Encode(true)
 		return
 	}
