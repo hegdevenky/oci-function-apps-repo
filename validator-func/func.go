@@ -21,20 +21,24 @@ type FnIO struct {
 }
 
 func myHandler(ctx context.Context, in io.Reader, out io.Writer) {
-	log.Print("Inside validator function")
+	log.Print("INFO: inside validator function")
 	ip := new(FnIO)
-	json.NewDecoder(in).Decode(ip)
-	log.Printf("INFO: received input %+v\n", ip)
+	err := json.NewDecoder(in).Decode(ip)
+	if err != nil {
+		log.Printf("ERROR: failed to parse the request %+v. "+
+			"proceeding with default values\n", *ip)
+	}
+	log.Printf("INFO: received input %+v\n", *ip)
 	timeout := defaultTimeoutInSeconds
 	if ip.TimeoutInSeconds != 0 {
 		timeout = ip.TimeoutInSeconds
 	}
-	log.Printf("executing business logic...time remaining %ds\n", timeout)
+	log.Printf("INFO: executing business logic...time remaining %ds\n", timeout)
 	time.Sleep(time.Duration(timeout) * time.Second)
 	if ip.Input != "" || ip.TimeoutInSeconds != 0 {
 		json.NewEncoder(out).Encode(true)
 		return
 	}
-	log.Print("Didn't receive an input")
+	log.Print("INFO: didn't receive an input")
 	json.NewEncoder(out).Encode(false)
 }
