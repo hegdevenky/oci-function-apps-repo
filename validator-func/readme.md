@@ -1,5 +1,5 @@
 ```shell
-echo -n '{"inputString": "hello","operation": "UPPER", "dryRun": true}' | fn invoke dlcdep-5738-test-app string-util-func --content-type application/json
+echo -n '{"input": "hello world", "executionTimeInSeconds": 10}' | fn invoke <application-name> validator-func --content-type application/json
 ```
 
 ```dockerfile
